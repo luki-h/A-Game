@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="An endless single-player money clicker.">
+<title>Money Press</title>
+<link rel="stylesheet" href="style.css">
+<script src="game.js" defer></script>
+</head>
+<body>
+<header class="masthead"><span class="brand-mark" aria-hidden="true">$</span> Money Press</header>
+<main>
+  <section class="press" aria-labelledby="balance-label">
+    <p class="eyebrow" id="balance-label">Balance</p>
+    <p class="balance" id="balance">$0</p>
+    <div class="rates">
+      <span><strong id="per-click">$1</strong> per click</span>
+      <span><strong id="per-second">$0</strong> per second</span>
+    </div>
+    <div class="bill-area" id="bill-area">
+      <button class="bill" id="bill" aria-label="Click the dollar bill to earn coins">
+        <span class="bill-face" aria-hidden="true">
+          <span class="corner top-left">1</span><span class="corner top-right">1</span>
+          <span class="bill-title">MONEY PRESS</span><span class="seal">$</span>
+          <span class="bill-title">ONE DOLLAR</span>
+          <span class="corner bottom-left">1</span><span class="corner bottom-right">1</span>
+        </span>
+      </button>
+    </div>
+    <p class="hint">Click the bill to earn coins</p>
+  </section>
+  <section class="shop" aria-labelledby="shop-heading">
+    <h1 id="shop-heading">Upgrades</h1>
+    <form id="bank-form" class="bank-form">
+      <label for="bank-name">Your bank’s name</label>
+      <div class="name-controls"><input id="bank-name" maxlength="32" required><button>Save</button></div>
+    </form>
+    <p id="notice" class="sr-only" role="status"></p>
+    <ul id="upgrades" class="upgrades"></ul>
+  </section>
+</main>
+</body>
+</html>

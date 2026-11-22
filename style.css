@@ -1,0 +1,97 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  background: #101915;
+  color: #edf4ea;
+  --muted: #adbeb2;
+  --mint: #c8ef96;
+  --line: #34463b;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 3px solid #f6d497; outline-offset: 4px; }
+.masthead {
+  border-bottom: 1px solid var(--line);
+  padding: 1rem max(5vw, calc((100vw - 1220px) / 2));
+  display: flex; align-items: center; gap: .75rem;
+  font-weight: 800; font-size: 1.15rem;
+}
+.brand-mark {
+  display: grid; place-items: center; width: 2rem; height: 2rem;
+  border-radius: 50%; background: var(--mint); color: #182819;
+}
+main {
+  max-width: 1220px; margin: 0 auto; padding: clamp(1rem, 4vw, 3rem) 1rem;
+  display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1.25rem;
+}
+.press, .shop { border: 1px solid var(--line); border-radius: 1.25rem; }
+.press {
+  position: sticky; top: 1rem; align-self: start;
+  padding: clamp(2rem, 8vw, 5rem) 1rem;
+  text-align: center;
+  background: radial-gradient(ellipse at 50% 62%, #293f2d, #17241c 72%);
+}
+.eyebrow { margin: 0; color: var(--muted); text-transform: uppercase; letter-spacing: .16em; font-size: .875rem; }
+.balance {
+  margin: .25rem 0 .8rem; color: var(--mint);
+  font-size: clamp(2.4rem, 7vw, 5rem); font-weight: 850; line-height: 1.1;
+  font-variant-numeric: tabular-nums; overflow-wrap: anywhere;
+}
+.rates { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem 1.25rem; color: var(--muted); }
+.rates strong { color: #fff; }
+.bill-area { position: relative; margin: clamp(2rem, 6vw, 4rem) auto 0; max-width: 25rem; }
+.bill {
+  display: block; width: 100%; padding: .65rem; color: #223f29;
+  border: 2px solid #dbe8ac; border-radius: .65rem;
+  background: #adca89; box-shadow: 0 .45rem 0 #59764c, 0 1rem 2rem #0b130c80;
+  transition: transform .12s, box-shadow .12s; touch-action: manipulation;
+}
+.bill:hover { background: #bfd99d; }
+.bill:active { transform: translateY(.3rem); box-shadow: 0 .15rem 0 #59764c; }
+.bill-face {
+  display: grid; justify-items: center; align-content: center; gap: .25rem;
+  position: relative; aspect-ratio: 2.3; border: 3px double #345839; border-radius: .35rem;
+  background: repeating-linear-gradient(135deg, transparent 0 4px, #34583915 4px 5px);
+}
+.bill-title { font: bold clamp(.72rem, 2vw, .95rem) Georgia, serif; letter-spacing: .15em; }
+.seal {
+  display: grid; place-items: center; width: 1.5em; height: 1.5em;
+  border: 4px double; border-radius: 50%; background: #c2d9a4;
+  font: bold clamp(2rem, 6vw, 3.6rem)/1 Georgia, serif;
+}
+.corner { position: absolute; font: bold clamp(1rem, 4vw, 1.75rem) Georgia, serif; }
+.top-left { top: .15rem; left: .55rem; }
+.top-right { top: .15rem; right: .55rem; }
+.bottom-left { bottom: .15rem; left: .55rem; }
+.bottom-right { bottom: .15rem; right: .55rem; }
+.hint { margin: 1.5rem 0 0; color: var(--muted); }
+.shop { padding: clamp(1rem, 3vw, 1.6rem); background: #18241d; }
+h1 { margin: 0 0 1rem; font-size: 1.6rem; }
+.bank-form { margin-bottom: 1rem; }
+.bank-form label { display: block; margin-bottom: .4rem; color: var(--muted); }
+.name-controls { display: flex; gap: .5rem; }
+input {
+  width: 100%; min-width: 0; padding: .65rem .75rem; background: #101915;
+  color: inherit; border: 1px solid var(--line); border-radius: .55rem;
+}
+.shop button {
+  padding: .55rem .75rem; border: 1px solid transparent; border-radius: .55rem;
+  background: var(--mint); color: #1b2b17; font-weight: 750;
+}
+.shop button[aria-disabled="true"] { background: #2b3b31; color: #bac9bd; cursor: default; }
+.upgrades { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.upgrade {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .45rem .65rem;
+  padding: .7rem; border: 1px solid var(--line); border-radius: .7rem;
+}
+.upgrade h2 { margin: 0; font-size: 1rem; overflow-wrap: anywhere; }
+.upgrade p { margin: .2rem 0 0; color: var(--muted); font-size: .875rem; }
+.upgrade button { min-width: 4.5rem; }
+.gain { position: absolute; z-index: 1; pointer-events: none; color: #f4ffd9; font-weight: 850; left: 50%; top: 10%; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 750px) {
+  main { grid-template-columns: 1fr; max-width: 580px; }
+  .press { position: static; }
+}
