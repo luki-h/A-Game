@@ -117,16 +117,21 @@ function setText(element, value) {
 function animateFingers() {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   get('finger-icons').animate?.([
-    { transform: 'translate(-50%, 0)' },
-    { transform: 'translate(-50%, -.8rem)', offset: .45 },
-    { transform: 'translate(-50%, 0)' },
+    { transform: 'translateY(0)' },
+    { transform: 'translateY(-.8rem)', offset: .45 },
+    { transform: 'translateY(0)' },
   ], { duration: Math.min(240, fingerInterval() * 800) });
 }
 
 function renderFingers() {
   const count = levels.finger;
   get('finger-icons').hidden = count === 0;
-  setText(get('finger-icons'), '👆'.repeat(Math.min(count, 5)));
+  const icons = get('finger-icons');
+  while (icons.childElementCount < count) {
+    const finger = document.createElement('span');
+    finger.textContent = '👆';
+    icons.append(finger);
+  }
   const status = count === 0
     ? 'Unlock your first auto finger for $25'
     : count + (count === 1 ? ' auto finger active' : ' auto fingers active');
