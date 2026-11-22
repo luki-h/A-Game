@@ -65,6 +65,7 @@ function advance(now) {
     const clicks = Math.floor(state.fingerProgress + 1e-10);
     state.fingerProgress = Math.max(0, state.fingerProgress - clicks);
     state.balance += clicks * fingerValue();
+    if (clicks > 0) animateFingers();
   }
   state.passiveProgress += elapsed * passiveRate();
   const coins = Math.floor(state.passiveProgress);
@@ -107,7 +108,24 @@ function setText(element, value) {
   if (element.textContent !== value) element.textContent = value;
 }
 
+function animateFingers() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  get('finger-icons').animate([
+    { transform: 'translateY(0)' },
+    { transform: 'translateY(-.55rem)', offset: .45 },
+    { transform: 'translateY(0)' },
+  ], { duration: Math.min(240, fingerInterval() * 800) });
+}
+
+function renderFingers() {
+  const count = levels.finger;
+  get('finger-display').hidden = count === 0;
+  setText(get('finger-icons'), '👆'.repeat(Math.min(count, 5)));
+  setText(get('finger-count'), count + (count === 1 ? ' auto finger' : ' auto fingers'));
+}
+
 function render() {
+  renderFingers();
   setText(get('balance'), money(state.balance));
   setText(get('per-click'), money(clickValue()));
   setText(get('per-second'), money(fingerValue() / fingerInterval() + passiveRate()));
