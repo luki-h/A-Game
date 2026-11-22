@@ -33,7 +33,6 @@
     <div class="finger-display">
       <span id="finger-count"></span>
     </div>
-    <button class="gold-bar" id="gold-bar" type="button" hidden>Gold bar · Claim bonus</button>
     <p id="v2-message" role="status" hidden></p>
     <p class="hint">Click the bill to earn coins</p>
   </section>
@@ -49,7 +48,7 @@
     </section>
     <section class="extras" id="online-panel" hidden>
       <h2>Leaderboard</h2>
-      <p id="online-status" role="status">Supabase setup required for accounts and the leaderboard.</p>
+      <p id="online-status" role="status">Connecting to the leaderboard…</p>
       <form id="account-form" hidden>
         <label>Email <input name="email" type="email" autocomplete="email" required></label>
         <label>Password <input name="password" type="password" autocomplete="current-password" minlength="6" required></label>
@@ -66,5 +65,6 @@
     <ul id="upgrades" class="upgrades"></ul>
   </section>
 </main>
+<button class="gold-bar" id="gold-bar" type="button" hidden>Gold bar · Claim bonus</button>
 </body>
 </html>

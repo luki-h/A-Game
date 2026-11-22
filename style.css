@@ -116,13 +116,24 @@ input {
 
 .mode-switch { margin-inline-start: auto; display: flex; align-items: center; gap: .5rem; font-size: .9rem; cursor: pointer; }
 .mode-switch input { width: 1.2rem; height: 1.2rem; accent-color: var(--mint); }
-.press .gold-bar {
-  position: absolute; top: 1rem; right: 1rem; z-index: 3;
+.gold-bar {
+  position: fixed; z-index: 5;
+  left: clamp(5.75rem, var(--gold-x, 50%), calc(100% - 5.75rem));
+  top: var(--gold-y, 50%);
+  width: 9rem;
+  transform: translate(-50%, -50%);
+  animation: gold-flutter 2.8s ease-in-out infinite;
   border: 2px solid #ffe7a2; border-radius: .4rem; padding: .4rem .7rem;
   color: #442a05; background: linear-gradient(#ffe69d, #e1a740); font-weight: 800;
 }
-.press { position: relative; }
-@media (min-width: 751px) { .press { position: sticky; } }
+@keyframes gold-flutter {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-4deg); }
+  30% { transform: translate(calc(-50% + 1rem), calc(-50% - .7rem)) rotate(5deg); }
+  70% { transform: translate(calc(-50% - 1rem), calc(-50% + .65rem)) rotate(-6deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gold-bar { animation: none; }
+}
 .extras { margin-bottom: 1rem; border: 1px solid var(--line); padding: .8rem; border-radius: .7rem; }
 .extras h2 { margin: 0 0 .5rem; font-size: 1.1rem; }
 .extras label { display: block; margin-bottom: .5rem; }

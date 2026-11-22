@@ -1,7 +1,9 @@
 'use strict';
 
-// Enter the URL and publishable key from your Supabase project's Connect panel.
-const leaderboardConfig = { url: '', publishableKey: '' };
+const leaderboardConfig = {
+  url: 'https://upkkvczvobtgkacfbcxe.supabase.co',
+  publishableKey: 'sb_publishable_o3kyAsd0JRdNXJWaW2JSCw_bWQnHpSx',
+};
 let onlineClient;
 let onlineUser;
 let onlineBusy = false;

@@ -210,6 +210,8 @@ let goldTimer;
 function scheduleGold() {
   goldTimer = setTimeout(() => {
     if (!state.v2) return;
+    goldBar.style.setProperty('--gold-x', (15 + Math.random() * 70) + '%');
+    goldBar.style.setProperty('--gold-y', (18 + Math.random() * 60) + '%');
     goldBar.hidden = false;
     goldTimer = setTimeout(() => {
       goldBar.hidden = true;
