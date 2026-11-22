@@ -39,9 +39,10 @@ async function runOnline(action) {
 
 function showAccount(user) {
   onlineUser = user;
-  get('account-form').hidden = Boolean(user);
-  get('account-actions').hidden = !user;
-  onlineStatus(user ? 'Signed in. Post your bill clicks to enter the leaderboard.' : 'Sign in to post your bill clicks.');
+  const username = user?.user_metadata?.leaderboard_username;
+  get('account-form').hidden = Boolean(username);
+  get('account-actions').hidden = !username;
+  onlineStatus(username ? 'Playing as ' + username + '.' : 'Choose a username to post your bill clicks.');
 }
 
 async function connectLeaderboard() {
@@ -63,14 +64,17 @@ get('account-form').addEventListener('submit', (event) => {
   event.preventDefault();
   runOnline(async () => {
     const fields = new FormData(event.currentTarget);
-    const credentials = { email: fields.get('email'), password: fields.get('password') };
-    const result = event.submitter?.value === 'signup'
-      ? await onlineClient.auth.signUp(credentials)
-      : await onlineClient.auth.signInWithPassword(credentials);
-    if (result.error) throw result.error;
-    get('account-form').reset();
-    showAccount(result.data.session?.user);
-    if (!result.data.session) onlineStatus('Check your email to confirm your account, then sign in.');
+    const username = fields.get('username').trim();
+    if (!username) {
+      onlineStatus('Enter a username.');
+      return;
+    }
+    const metadata = { leaderboard_username: username };
+    const { data, error } = onlineUser
+      ? await onlineClient.auth.updateUser({ data: metadata })
+      : await onlineClient.auth.signInAnonymously({ options: { data: metadata } });
+    if (error) throw error;
+    showAccount(data.user);
   });
 });
 
@@ -78,18 +82,12 @@ get('post-score').addEventListener('click', () => runOnline(async () => {
   if (!onlineUser) return;
   const { error } = await onlineClient.from('money_press_scores').upsert({
     user_id: onlineUser.id,
-    bank_name: state.bankName,
+    bank_name: onlineUser.user_metadata.leaderboard_username,
     bill_clicks: state.billClicks,
   });
   if (error) throw error;
   await refreshLeaderboard();
   onlineStatus('Score posted.');
-}));
-
-get('sign-out').addEventListener('click', () => runOnline(async () => {
-  const { error } = await onlineClient.auth.signOut();
-  if (error) throw error;
-  showAccount(null);
 }));
 
 connectLeaderboard();

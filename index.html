@@ -50,14 +50,11 @@
       <h2>Leaderboard</h2>
       <p id="online-status" role="status">Connecting to the leaderboard…</p>
       <form id="account-form" hidden>
-        <label>Email <input name="email" type="email" autocomplete="email" required></label>
-        <label>Password <input name="password" type="password" autocomplete="current-password" minlength="6" required></label>
-        <button value="signin">Sign in</button>
-        <button value="signup">Create account</button>
+        <label>Username <input name="username" autocomplete="username" maxlength="32" required></label>
+        <button>Join leaderboard</button>
       </form>
       <div id="account-actions" hidden>
         <button type="button" id="post-score">Post my bill clicks</button>
-        <button type="button" id="sign-out">Sign out</button>
       </div>
       <ol id="scores"></ol>
     </section>
