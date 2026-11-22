@@ -102,9 +102,15 @@ input {
   font-size: .875rem;
 }
 .finger-icons {
-  display: block;
-  margin-bottom: .25rem;
-  font-size: clamp(1.4rem, 5vw, 2rem);
+  position: absolute;
+  z-index: 2;
+  bottom: -.9rem;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  white-space: nowrap;
+  font-size: clamp(1.6rem, 6vw, 2.65rem);
+  filter: drop-shadow(0 2px 3px #101915);
   letter-spacing: .15em;
   line-height: 1.3;
 }
