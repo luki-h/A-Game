@@ -1,3 +1,3 @@
 who plays: 1 player plays on one device
 win or lose: this is an endless game no winning or losing
-on screen: a clicker game where one player click the $ bill and you get a coin with the coins you can upgrade to +1 dollars per click, get a finger that clicks for you and you can upgrade it to click faster but at the start the finger clicks every 1.5 seconds and banks, and there are a lot more upgrades 
+on screen: a clicker game where one player click the $ bill and you get a coin with the coins you can upgrade to +1 dollars per click, get a finger that clicks for you and you can upgrade it to click faster but at the start the finger clicks every 1.5 seconds and banks, and there are a lot more upgrades. you can name your bank
