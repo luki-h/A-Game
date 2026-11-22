@@ -114,3 +114,19 @@ input {
   letter-spacing: .15em;
   line-height: 1.3;
 }
+
+.mode-switch { margin-inline-start: auto; display: flex; align-items: center; gap: .5rem; font-size: .9rem; cursor: pointer; }
+.mode-switch input { width: 1.2rem; height: 1.2rem; accent-color: var(--mint); }
+.press .gold-bar {
+  position: absolute; top: 1rem; right: 1rem; z-index: 3;
+  border: 2px solid #ffe7a2; border-radius: .4rem; padding: .4rem .7rem;
+  color: #442a05; background: linear-gradient(#ffe69d, #e1a740); font-weight: 800;
+}
+.press { position: relative; }
+@media (min-width: 751px) { .press { position: sticky; } }
+.extras { margin-bottom: 1rem; border: 1px solid var(--line); padding: .8rem; border-radius: .7rem; }
+.extras h2 { margin: 0 0 .5rem; font-size: 1.1rem; }
+.extras label { display: block; margin-bottom: .5rem; }
+.extras button { margin-block: .25rem; }
+#online-status { color: var(--muted); }
+#scores { overflow-wrap: anywhere; }

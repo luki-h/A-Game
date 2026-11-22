@@ -22,6 +22,8 @@ const money = (value) => '$' + (value >= 1e15 ? value.toExponential(2)
 function loadGame() {
   const initial = {
     balance: 0,
+    v2: false,
+    billClicks: 0,
     bankName: 'Money Press Bank',
     levels: Object.fromEntries(upgrades.map(({ id }) => [id, 0])),
     fingerProgress: 0,
@@ -30,6 +32,10 @@ function loadGame() {
   try {
     const saved = JSON.parse(localStorage.getItem(saveKey));
     if (!saved) return initial;
+    initial.v2 = saved.v2 === true;
+    if (Number.isSafeInteger(saved.billClicks) && saved.billClicks >= 0) {
+      initial.billClicks = saved.billClicks;
+    }
     for (const key of ['balance', 'fingerProgress', 'passiveProgress']) {
       if (Number.isFinite(saved[key]) && saved[key] >= 0) initial[key] = saved[key];
     }
@@ -128,6 +134,7 @@ function renderFingers() {
 }
 
 function render() {
+  get('command-panel').hidden = !state.v2 || state.bankName !== 'supaRich';
   renderFingers();
   setText(get('balance'), money(state.balance));
   setText(get('per-click'), money(clickValue()));
@@ -166,6 +173,7 @@ get('bill').addEventListener('click', () => {
   advance(performance.now());
   const gain = clickValue();
   state.balance += gain;
+  state.billClicks += 1;
   saveGame();
   render();
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -191,3 +199,55 @@ window.addEventListener('pagehide', () => {
   saveGame();
 });
 render();
+
+const goldBar = get('gold-bar');
+let goldTimer;
+function scheduleGold() {
+  goldTimer = setTimeout(() => {
+    if (!state.v2) return;
+    goldBar.hidden = false;
+    goldTimer = setTimeout(() => {
+      goldBar.hidden = true;
+      scheduleGold();
+    }, 10000);
+  }, 15000 + Math.random() * 20000);
+}
+
+function syncMode() {
+  get('v2-mode').checked = state.v2;
+  get('online-panel').hidden = !state.v2;
+  get('v2-message').hidden = !state.v2;
+  get('v2-message').textContent = '';
+  clearTimeout(goldTimer);
+  goldBar.hidden = true;
+  if (state.v2) scheduleGold();
+  render();
+}
+
+get('v2-mode').addEventListener('change', () => {
+  state.v2 = get('v2-mode').checked;
+  saveGame();
+  syncMode();
+});
+
+goldBar.addEventListener('click', () => {
+  if (!state.v2 || goldBar.hidden) return;
+  clearTimeout(goldTimer);
+  goldBar.hidden = true;
+  const bonus = Math.max(25, clickValue() * 20);
+  state.balance += bonus;
+  get('v2-message').textContent = 'Gold bar collected · +' + money(bonus);
+  saveGame();
+  render();
+  scheduleGold();
+});
+
+get('grant-coins').addEventListener('click', () => {
+  if (!state.v2 || state.bankName !== 'supaRich') return;
+  state.balance += 10000;
+  get('v2-message').textContent = 'Command executed · +$10,000';
+  saveGame();
+  render();
+});
+
+syncMode();
