@@ -208,16 +208,19 @@ render();
 const goldBar = get('gold-bar');
 let goldTimer;
 function scheduleGold() {
+  goldTimer = setTimeout(showGold, 15000 + Math.random() * 20000);
+}
+
+function showGold() {
+  if (!state.v2) return;
+  clearTimeout(goldTimer);
+  goldBar.style.setProperty('--gold-x', (15 + Math.random() * 70) + '%');
+  goldBar.style.setProperty('--gold-y', (18 + Math.random() * 60) + '%');
+  goldBar.hidden = false;
   goldTimer = setTimeout(() => {
-    if (!state.v2) return;
-    goldBar.style.setProperty('--gold-x', (15 + Math.random() * 70) + '%');
-    goldBar.style.setProperty('--gold-y', (18 + Math.random() * 60) + '%');
-    goldBar.hidden = false;
-    goldTimer = setTimeout(() => {
-      goldBar.hidden = true;
-      scheduleGold();
-    }, 10000);
-  }, 15000 + Math.random() * 20000);
+    goldBar.hidden = true;
+    scheduleGold();
+  }, 10000);
 }
 
 function syncMode() {
@@ -249,10 +252,24 @@ goldBar.addEventListener('click', () => {
   scheduleGold();
 });
 
-get('grant-coins').addEventListener('click', () => {
-  if (!state.v2 || state.bankName !== 'supaRich') return;
-  state.balance += 10000;
-  get('v2-message').textContent = 'Command executed · +$10,000';
+get('command-panel').addEventListener('click', (event) => {
+  const button = event.target.closest('button');
+  if (!button || !state.v2 || state.bankName !== 'supaRich') return;
+  if (button.id === 'spawn-gold') {
+    showGold();
+    get('command-status').textContent = 'Gold bar spawned.';
+    return;
+  }
+  advance(performance.now());
+  const balance = button.id === 'grant-coins'
+    ? state.balance + 10000
+    : state.balance * Number(button.dataset.balanceFactor);
+  if (!Number.isFinite(balance)) {
+    get('command-status').textContent = 'Balance is too large for that command.';
+    return;
+  }
+  state.balance = balance;
+  get('command-status').textContent = 'Balance set to ' + money(balance) + '.';
   saveGame();
   render();
 });

@@ -8,13 +8,28 @@ let onlineClient;
 let onlineUser;
 let onlineBusy = false;
 
+async function withConnectionTimeout(connect) {
+  let timer;
+  try {
+    return await Promise.race([
+      connect(),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('The leaderboard connection timed out.')), 10000);
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 function onlineStatus(message) {
   get('online-status').textContent = message;
 }
 
-async function refreshLeaderboard() {
-  const { data, error } = await onlineClient.from('money_press_scores')
+async function refreshLeaderboard(signal) {
+  const query = onlineClient.from('money_press_scores')
     .select('bank_name,bill_clicks').order('bill_clicks', { ascending: false }).limit(10);
+  const { data, error } = await (signal ? query.abortSignal(signal) : query);
   if (error) throw error;
   const list = get('scores');
   list.replaceChildren();
@@ -46,20 +61,31 @@ function showAccount(user) {
 }
 
 async function connectLeaderboard() {
-  if (onlineClient || !leaderboardConfig.url || !leaderboardConfig.publishableKey) return;
+  const retry = get('retry-leaderboard');
+  if (onlineClient && retry.hidden) return;
   await runOnline(async () => {
-    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
-    if (!state.v2) return;
-    const client = createClient(leaderboardConfig.url, leaderboardConfig.publishableKey);
-    const { data, error } = await client.auth.getSession();
-    if (error) throw error;
-    onlineClient = client;
-    showAccount(data.session?.user);
-    await refreshLeaderboard();
+    retry.hidden = true;
+    onlineStatus('Connecting to the leaderboard…');
+    try {
+      const { data, error } = await withConnectionTimeout(async () => {
+        if (!onlineClient) {
+          const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+          onlineClient ??= createClient(leaderboardConfig.url, leaderboardConfig.publishableKey);
+        }
+        return onlineClient.auth.getSession();
+      });
+      if (error) throw error;
+      showAccount(data.session?.user);
+      await refreshLeaderboard(AbortSignal.timeout(10000));
+    } catch (error) {
+      retry.hidden = false;
+      throw error;
+    }
   });
 }
 
 get('v2-mode').addEventListener('change', connectLeaderboard);
+get('retry-leaderboard').addEventListener('click', connectLeaderboard);
 get('account-form').addEventListener('submit', (event) => {
   event.preventDefault();
   runOnline(async () => {
@@ -73,6 +99,10 @@ get('account-form').addEventListener('submit', (event) => {
     const { data, error } = onlineUser
       ? await onlineClient.auth.updateUser({ data: metadata })
       : await onlineClient.auth.signInAnonymously({ options: { data: metadata } });
+    if (error?.code === 'anonymous_provider_disabled') {
+      onlineStatus('Username signup is disabled. Enable anonymous sign-ins in Supabase to join.');
+      return;
+    }
     if (error) throw error;
     showAccount(data.user);
   });

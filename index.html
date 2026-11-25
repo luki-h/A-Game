@@ -42,13 +42,24 @@
       <label for="bank-name">Your bank’s name</label>
       <div class="name-controls"><input id="bank-name" maxlength="32" required><button>Save</button></div>
     </form>
-    <section class="extras" id="command-panel" hidden>
-      <h2>Command panel</h2>
-      <button type="button" id="grant-coins">Add $10,000</button>
+    <section class="extras" id="command-panel" aria-labelledby="command-heading" hidden>
+      <h2 id="command-heading">Dev tools</h2>
+      <div class="command-group" role="group" aria-label="Balance">
+        <button type="button" data-balance-factor="10" aria-label="Multiply balance by 10">×10</button>
+        <button type="button" data-balance-factor="0.1" aria-label="Divide balance by 10">÷10</button>
+        <button type="button" data-balance-factor="1000" aria-label="Multiply balance by 1,000">×1k</button>
+        <button type="button" data-balance-factor="0.001" aria-label="Divide balance by 1,000">÷1k</button>
+        <button type="button" id="grant-coins">Add $10,000</button>
+      </div>
+      <div class="command-group" role="group" aria-label="Bonuses">
+        <button type="button" id="spawn-gold">Spawn gold bar</button>
+      </div>
+      <p id="command-status" role="status"></p>
     </section>
     <section class="extras" id="online-panel" hidden>
       <h2>Leaderboard</h2>
-      <p id="online-status" role="status">Connecting to the leaderboard…</p>
+      <p id="online-status" role="status">Leaderboard script unavailable. Reload the game to try again.</p>
+      <button type="button" id="retry-leaderboard" hidden>Retry connection</button>
       <form id="account-form" hidden>
         <label>Username <input name="username" autocomplete="username" maxlength="32" required></label>
         <button>Join leaderboard</button>
